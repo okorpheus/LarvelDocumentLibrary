@@ -1,0 +1,26 @@
+{
+    "name": "okorpheus/document-library",
+    "description": "A package to manage a collection of PDF documents",
+    "type": "package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Okorpheus\\DocumentLibrary\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Okorpheus\\DocumentLibrary\\DocumentLibraryServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Matt Young",
+            "email": "matt@mattyoung.us"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
