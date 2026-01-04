@@ -11,6 +11,16 @@
     <header>
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Document Library</h1>
+            @if($fullPath)
+                <div class="mt-3">
+                @foreach($fullPath as $pathItem)
+                    <a href="{{$pathItem['link']}}" class="underline hover:text-blue-600">
+                        {{ $pathItem['name'] }}
+                    </a>
+                    @unless($loop->last) -> @endunless
+                @endforeach
+                </div>
+            @endif
         </div>
     </header>
     <main>
@@ -21,6 +31,9 @@
                         <table class="min-w-full leading-normal">
                             <thead>
                             <tr>
+                                <x-document-library::file-list-th>
+                                    Name
+                                </x-document-library::file-list-th>
                                 <x-document-library::file-list-th>
                                     Visibility
                                 </x-document-library::file-list-th>
@@ -39,6 +52,7 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             @if($parentLink)
                                 <tr>
                                     <x-document-library::file-list-td colspan="6">

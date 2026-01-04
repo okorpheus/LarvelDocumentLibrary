@@ -40,4 +40,15 @@ class Directory extends Model
     {
         return $this->hasMany(Directory::class, 'parent_id');
     }
+
+    public function fullPath(): string
+    {
+        $path = '/'.$this->name;
+        if (! $this->parent) {
+            return $path;
+        }
+        $path = '/'.$this->parent->name.$path;
+        return $path;
+
+    }
 }
