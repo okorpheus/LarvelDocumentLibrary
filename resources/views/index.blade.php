@@ -21,30 +21,21 @@
                         <table class="min-w-full leading-normal">
                             <thead>
                             <tr>
-                                <th scope="col"
-                                    class="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                    Name
-                                </th>
-                                <th scope="col"
-                                    class="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                <x-document-library::file-list-th>
                                     Visibility
-                                </th>
-                                <th scope="col"
-                                    class="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                </x-document-library::file-list-th>
+                                <x-document-library::file-list-th>
                                     Size
-                                </th>
-                                <th scope="col"
-                                    class="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                </x-document-library::file-list-th>
+                                <x-document-library::file-list-th>
                                     Owner
-                                </th>
-                                <th scope="col"
-                                    class="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                </x-document-library::file-list-th>
+                                <x-document-library::file-list-th>
                                     Created
-                                </th>
-                                <th scope="col"
-                                    class="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200">
+                                </x-document-library::file-list-th>
+                                <x-document-library::file-list-th>
                                     Modified
-                                </th>
+                                </x-document-library::file-list-th>
                             </tr>
                             </thead>
                             <tbody>
