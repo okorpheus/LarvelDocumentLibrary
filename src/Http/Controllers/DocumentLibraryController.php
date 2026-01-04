@@ -9,12 +9,19 @@ class DocumentLibraryController extends Controller
 {
     public function index(?Directory $directory)
     {
-        if ($directory->exists()) {
+
+        if ($directory->exists === true) {
             $directories = Directory::where('parent_id',$directory->id)->orderBy('sort_order')->orderBy('name')->get();
+            $displayedDirectory = $directory;
+            $parentLink = $directory->parent ?
+                route('document-library.directory', $directory->parent) :
+                route('document-library.index');
         } else {
             $directories = Directory::whereNull('parent_id')->orderBy('sort_order')->orderBy('name')->get();
+            $displayedDirectory = false;
+            $parentLink = false;
         }
 
-        return view('document-library::index', compact('directories'));
+        return view('document-library::index', compact('directories', 'displayedDirectory', 'parentLink'));
     }
 }

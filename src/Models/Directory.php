@@ -5,6 +5,7 @@ namespace Okorpheus\DocumentLibrary\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Directory extends Model
 {
@@ -26,5 +27,15 @@ class Directory extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Directory::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Directory::class, 'parent_id');
     }
 }

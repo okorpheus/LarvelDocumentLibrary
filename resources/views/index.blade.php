@@ -48,38 +48,42 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @if($parentLink)
+                                <tr>
+                                    <x-document-library::file-list-td colspan="6">
+                                        <a href="{{ $parentLink }}">
+                                            Parent Directory
+                                        </a>
+                                    </x-document-library::file-list-td>
+                                </tr>
+                            @endif
                             @foreach($directories as $directory)
                                 <tr>
-                                    <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p class="text-gray-900 whitespace-no-wrap">
+                                    <x-document-library::file-list-td>
+                                        <a href="{{ route('document-library.directory', $directory) }}">
                                             {{ $directory->name }}
-                                        </p>
-                                    </td>
-                                    <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            {{ $directory->visibility }}
-                                        </p>
-                                    </td>
-                                    <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            ---
-                                        </p>
-                                    </td>
-                                    <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            {{ $directory->user->email ?? '' }}
-                                        </p>
-                                    </td>
-                                    <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            {{ $directory->created_at->format('m/d/Y H:i:s') }}
-                                        </p>
-                                    </td>
-                                    <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            {{ $directory->updated_at->format('m/d/Y H:i:s') }}
-                                        </p>
-                                    </td>
+                                        </a>
+                                    </x-document-library::file-list-td>
+
+                                    <x-document-library::file-list-td>
+                                        {{ $directory->visibility }}
+                                    </x-document-library::file-list-td>
+
+                                    <x-document-library::file-list-td>
+                                        ---
+                                    </x-document-library::file-list-td>
+
+                                    <x-document-library::file-list-td>
+                                        {{ $directory->user->email ?? '' }}
+                                    </x-document-library::file-list-td>
+
+                                    <x-document-library::file-list-td>
+                                        {{ $directory->created_at->format('m/d/Y H:i:s') }}
+                                    </x-document-library::file-list-td>
+
+                                    <x-document-library::file-list-td>
+                                        {{ $directory->updated_at->format('m/d/Y H:i:s') }}
+                                    </x-document-library::file-list-td>
 
                                 </tr>
                             @endforeach
@@ -87,11 +91,11 @@
 
                             </tbody>
                         </table>
-{{--                        <div class="flex flex-col items-center px-5 py-5 bg-white xs:flex-row xs:justify-between">--}}
-{{--                            <div class="flex items-center">--}}
-{{--                                {{ $diretories->links() }}--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        {{--                        <div class="flex flex-col items-center px-5 py-5 bg-white xs:flex-row xs:justify-between">--}}
+                        {{--                            <div class="flex items-center">--}}
+                        {{--                                {{ $diretories->links() }}--}}
+                        {{--                            </div>--}}
+                        {{--                        </div>--}}
                     </div>
                 </div>
             </div>
