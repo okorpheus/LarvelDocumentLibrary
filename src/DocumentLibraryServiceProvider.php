@@ -2,6 +2,7 @@
 
 namespace Okorpheus\DocumentLibrary;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class DocumentLibraryServiceProvider extends ServiceProvider
@@ -11,7 +12,10 @@ class DocumentLibraryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/documentlibrary.php',
+            'documentlibrary'
+        );
     }
 
     /**
@@ -19,7 +23,20 @@ class DocumentLibraryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        $this->publishes([
+            __DIR__.'/../config/documentlibrary.php' => config_path('documentlibrary.php'),
+        ],'documentlibrary-config');
+
+        // Register route model binding BEFORE loading routes
+        Route::bind('directory', function ($value) {
+            return \Okorpheus\DocumentLibrary\Models\Directory::findOrFail($value);
+        });
+
+        // Load routes with web middleware group to enable route model binding
+        Route::middleware('web')
+            ->group(__DIR__ . '/../routes/web.php');
+
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'document-library');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }

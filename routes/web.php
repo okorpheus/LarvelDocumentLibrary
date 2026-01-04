@@ -5,5 +5,6 @@ use Okorpheus\DocumentLibrary\Http\Controllers\DocumentLibraryController;
 
 
 Route::prefix('document-library')->group(function () {
-    Route::get('/', [DocumentLibraryController::class, 'public'])->name('document-library.public');
+    Route::get('/', [DocumentLibraryController::class, 'index'])->name('document-library.index');
+    Route::get('/{directory}', [DocumentLibraryController::class, 'index'])->name('document-library.directory');
 });
