@@ -12,6 +12,15 @@ class Directory extends Model
 {
     protected $table;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'visibility',
+        'parent_id',
+        'sort_order',
+        'user_id',
+    ];
+
     protected function casts(): array
     {
         return [

@@ -5,20 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Document Library - Public View</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="h-full">
+<body class="h-full" x-data="{ 'showAddDirectoryForm':false }">
+@include('document-library::add-directory-modal')
 <div class="py-10">
     <header>
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Document Library</h1>
+            <div class="flex items-center justify-between">
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Document Library</h1>
+                <div class="flex gap-3">
+                    <button
+                        type="button"
+                        @click="showAddDirectoryForm = true"
+                        class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                        Add Directory
+                    </button>
+                    <button type="button" class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                        Upload File
+                    </button>
+                </div>
+            </div>
             @if($fullPath)
                 <div class="mt-3">
-                @foreach($fullPath as $pathItem)
-                    <a href="{{$pathItem['link']}}" class="underline hover:text-blue-600">
-                        {{ $pathItem['name'] }}
-                    </a>
-                    @unless($loop->last) -> @endunless
-                @endforeach
+                    @foreach($fullPath as $pathItem)
+                        <a href="{{$pathItem['link']}}" class="underline hover:text-blue-600">
+                            {{ $pathItem['name'] }}
+                        </a>
+                        @unless($loop->last)
+                            ->
+                        @endunless
+                    @endforeach
                 </div>
             @endif
         </div>
