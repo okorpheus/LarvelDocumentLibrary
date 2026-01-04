@@ -12,16 +12,14 @@ class DocumentLibraryController extends Controller
 
         if ($directory->exists === true) {
             $directories = Directory::where('parent_id',$directory->id)->orderBy('sort_order')->orderBy('name')->get();
-            $displayedDirectory = $directory;
             $parentLink = $directory->parent ?
                 route('document-library.directory', $directory->parent) :
                 route('document-library.index');
         } else {
             $directories = Directory::whereNull('parent_id')->orderBy('sort_order')->orderBy('name')->get();
-            $displayedDirectory = false;
             $parentLink = false;
         }
 
-        return view('document-library::index', compact('directories', 'displayedDirectory', 'parentLink'));
+        return view('document-library::index', compact('directories', 'parentLink'));
     }
 }
