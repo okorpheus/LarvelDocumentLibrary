@@ -3,6 +3,7 @@
 namespace Okorpheus\DocumentLibrary\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Okorpheus\DocumentLibrary\Enums\VisibilityValues;
 
 class Document extends Model
 {
@@ -11,6 +12,7 @@ class Document extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'visibility' => VisibilityValues::class,
         ];
     }
 

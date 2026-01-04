@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Okorpheus\DocumentLibrary\Enums\VisibilityValues;
 
 class Directory extends Model
 {
@@ -16,6 +17,7 @@ class Directory extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'visibility' => VisibilityValues::class,
         ];
     }
 
