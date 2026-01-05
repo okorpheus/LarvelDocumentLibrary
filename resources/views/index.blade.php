@@ -113,11 +113,6 @@
 
                             </tbody>
                         </table>
-                        {{--                        <div class="flex flex-col items-center px-5 py-5 bg-white xs:flex-row xs:justify-between">--}}
-                        {{--                            <div class="flex items-center">--}}
-                        {{--                                {{ $diretories->links() }}--}}
-                        {{--                            </div>--}}
-                        {{--                        </div>--}}
                     </div>
                 </div>
             </div>
