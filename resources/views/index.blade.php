@@ -7,8 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="h-full" x-data="{ 'showAddDirectoryForm':false }">
+<body class="h-full" x-data="{ 'showAddDirectoryForm':false, 'showFileUploadForm':false }">
+
+@if($errors->any())
+    @foreach($errors->all() as $error)
+
+        <div class="bg-red-200 border-red-600 text-red-600 border-l-4 p-4" role="alert">
+            <p class="font-bold">
+                Form Error
+            </p>
+            <p>
+                {{ $error }}
+            </p>
+        </div>
+
+    @endforeach
+@endif
+
 @include('document-library::add-directory-modal')
+@include('document-library::upload-file-modal')
 <div class="py-10">
     <header>
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -21,7 +38,10 @@
                         class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                         Add Directory
                     </button>
-                    <button type="button" class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                    <button
+                        type="button"
+                        @click="showFileUploadForm = true"
+                        class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                         Upload File
                     </button>
                 </div>
@@ -82,7 +102,7 @@
                             @foreach($directories as $directory)
                                 <tr>
                                     <x-document-library::file-list-td>
-                                        <a href="{{ route('document-library.directory', $directory) }}">
+                                        <a href="{{ route('document-library.directory', $directory) }}" class="underline hover:text-blue-600">
                                             {{ $directory->name }}
                                         </a>
                                     </x-document-library::file-list-td>
@@ -108,6 +128,29 @@
                                     </x-document-library::file-list-td>
 
                                 </tr>
+                            @endforeach
+                            @foreach($documents as $document)
+                                <x-document-library::file-list-td>
+                                    <a href="{{ $document->downloadUrl() }}" download="{{ $document->name }}" class="underline hover:text-blue-600">
+                                    {{ $document->name }}
+                                    </a>
+                                </x-document-library::file-list-td>
+                                <x-document-library::file-list-td>
+                                    {{ $document->visibility }}
+                                </x-document-library::file-list-td>
+                                <x-document-library::file-list-td>
+                                    {{ $document->readableSize() }}
+                                </x-document-library::file-list-td>
+                                <x-document-library::file-list-td>
+                                    {{ $document->user->email ?? '' }}
+                                </x-document-library::file-list-td>
+                                <x-document-library::file-list-td>
+                                    {{ $document->created_at->format('m/d/Y H:i:s') }}
+                                </x-document-library::file-list-td>
+
+                                <x-document-library::file-list-td>
+                                    {{ $document->updated_at->format('m/d/Y H:i:s') }}
+                                </x-document-library::file-list-td>
                             @endforeach
 
 

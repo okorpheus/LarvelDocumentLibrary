@@ -4,7 +4,10 @@ namespace Okorpheus\DocumentLibrary\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Validation\Rule;
+use Okorpheus\DocumentLibrary\Enums\VisibilityValues;
 use Okorpheus\DocumentLibrary\Models\Directory;
+use Okorpheus\DocumentLibrary\Models\Document;
 
 class DocumentLibraryController extends Controller
 {
@@ -13,6 +16,7 @@ class DocumentLibraryController extends Controller
 
         if ($directory->exists === true) {
             $directories = Directory::where('parent_id',$directory->id)->orderBy('sort_order')->orderBy('name')->get();
+            $documents = Document::where('parent_id', $directory->id)->orderBy('sort_order')->orderBy('name')->get();
             $parentLink = $directory->parent ?
                 route('document-library.directory', $directory->parent) :
                 route('document-library.index');
@@ -20,12 +24,13 @@ class DocumentLibraryController extends Controller
             $currentDirectory = $directory;
         } else {
             $directories = Directory::whereNull('parent_id')->orderBy('sort_order')->orderBy('name')->get();
+            $documents = Document::whereNull('parent_id')->orderBy('sort_order')->orderBy('name')->get();
             $parentLink = false;
             $fullPath = false;
             $currentDirectory = false;
         }
 
-        return view('document-library::index', compact('directories', 'parentLink', 'fullPath', 'currentDirectory'));
+        return view('document-library::index', compact('directories', 'parentLink', 'fullPath', 'currentDirectory', 'documents'));
     }
 
     public function storeDirectory(Request $request)
@@ -33,8 +38,8 @@ class DocumentLibraryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'visibility' => 'required|in:public,private,restricted',
-            'parent_id' => 'nullable|exists:okorpheus_doclib_directories,id',
+            'visibility' => ['required', Rule::enum(VisibilityValues::class)],
+            'parent_id' => ['nullable', Rule::exists(Directory::class, 'id')],
         ]);
 
         Directory::create([
@@ -76,5 +81,41 @@ class DocumentLibraryController extends Controller
         ]);
 
         return $breadcrumbs;
+    }
+
+    public function storeFile(Request $request)
+    {
+        $validated = $request->validate([
+            'uploaded-file' => ['required', 'file', 'mimetypes:text/plain,application/pdf'],
+            'description' => 'nullable|string',
+            'visibility' => ['required', Rule::enum(VisibilityValues::class)],
+            'parent_id' => ['nullable', Rule::exists(Directory::class, 'id')],
+        ]);
+        $name = $validated['uploaded-file']->getClientOriginalName();
+        $parent_id = $validated['parent_id'] ?? null;
+        $size = $validated['uploaded-file']->getSize();
+        $mime_type = $validated['uploaded-file']->getMimeType();
+        $user_id = auth()->id();
+        $disk = config('documentlibrary.storage_disk');
+        $path = $validated['uploaded-file']->store(
+            config('documentlibrary.storage_path'),
+            $disk
+        );
+
+        Document::create([
+            'name' => $name,
+            'description' => $validated['description'],
+            'sort_order' => 1,
+            'visibility' => $validated['visibility'],
+            'disk' => $disk,
+            'disk_path' => $path,
+            'parent_id' => $parent_id,
+            'size' => $size,
+            'mime_type' => $mime_type,
+            'user_id' => $user_id,
+        ]);
+
+        return redirect()->back();
+
     }
 }

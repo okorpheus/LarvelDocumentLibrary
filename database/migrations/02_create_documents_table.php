@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->integer('sort_order')->default(0);
             $table->string('visibility');
+            $table->string('disk');
             $table->string('disk_path')->unique();
             $table->foreignIdFor(Directory::class, 'parent_id')->nullable()->constrained(\config('documentlibrary.db_table_prefix').'directories')->cascadeOnDelete();
             $table->unsignedInteger('size'); //bytes
