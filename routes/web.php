@@ -10,4 +10,5 @@ Route::prefix('document-library')->group(function () {
     Route::post('/directory', [DocumentLibraryController::class, 'storeDirectory'])->name('document-library.directory.store');
     Route::post('/', [DocumentLibraryController::class, 'storeFile'])->name('document-library.file.store');
     Route::delete('/directory/{directory}', [DocumentLibraryController::class, 'destroyDirectory'])->name('document-library.directory.destroy');
+    Route::delete('/file/{document}', [DocumentLibraryController::class, 'destroyDocument'])->name('document-library.document.destroy');
 });

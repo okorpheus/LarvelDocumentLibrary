@@ -154,31 +154,42 @@
                                 </tr>
                             @endforeach
                             @foreach($documents as $document)
-                                <x-document-library::file-list-td>
-                                    Actions
-                                </x-document-library::file-list-td>
-                                <x-document-library::file-list-td>
-                                    <a href="{{ $document->downloadUrl() }}" download="{{ $document->name }}"
-                                       class="underline hover:text-blue-600">
-                                        {{ $document->name }}
-                                    </a>
-                                </x-document-library::file-list-td>
-                                <x-document-library::file-list-td>
-                                    {{ $document->visibility }}
-                                </x-document-library::file-list-td>
-                                <x-document-library::file-list-td>
-                                    {{ $document->readableSize() }}
-                                </x-document-library::file-list-td>
-                                <x-document-library::file-list-td>
-                                    {{ $document->user->email ?? '' }}
-                                </x-document-library::file-list-td>
-                                <x-document-library::file-list-td>
-                                    {{ $document->created_at->format('m/d/Y H:i:s') }}
-                                </x-document-library::file-list-td>
+                                <tr>
+                                    <x-document-library::file-list-td>
+                                        @can('delete', $document)
+                                            <form method="POST"
+                                                  action="{{ route('document-library.document.destroy', $document) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit">
+                                                    <x-heroicon-o-trash class="w-5 h-5 text-red-500 cursor-pointer"/>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        <a href="{{ $document->downloadUrl() }}" download="{{ $document->name }}"
+                                           class="underline hover:text-blue-600">
+                                            {{ $document->name }}
+                                        </a>
+                                    </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        {{ $document->visibility }}
+                                    </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        {{ $document->readableSize() }}
+                                    </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        {{ $document->user->email ?? '' }}
+                                    </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        {{ $document->created_at->format('m/d/Y H:i:s') }}
+                                    </x-document-library::file-list-td>
 
-                                <x-document-library::file-list-td>
-                                    {{ $document->updated_at->format('m/d/Y H:i:s') }}
-                                </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        {{ $document->updated_at->format('m/d/Y H:i:s') }}
+                                    </x-document-library::file-list-td>
+                                </tr>
                             @endforeach
 
 
