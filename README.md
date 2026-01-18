@@ -86,6 +86,30 @@ DOCLIB_STORAGE_DISK=public
 DOCLIB_STORAGE_PATH=document-library
 ```
 
+## Customizing Views
+
+To customize the document library interface, publish the views to your application:
+
+```bash
+php artisan vendor:publish --tag=documentlibrary-views
+```
+
+This will copy all views to `resources/views/vendor/document-library/`. You can then modify these files to match your application's design.
+
+### Available Views
+
+| File | Description |
+|------|-------------|
+| `index.blade.php` | Main document library listing page |
+| `add-directory-modal.blade.php` | Modal for creating new directories |
+| `edit-directory-modal.blade.php` | Modal for editing directories |
+| `upload-file-modal.blade.php` | Modal for uploading files |
+| `edit-document-modal.blade.php` | Modal for editing documents |
+| `components/file-list-th.blade.php` | Table header component |
+| `components/file-list-td.blade.php` | Table cell component |
+
+The views use Tailwind CSS and Alpine.js for styling and interactivity. Heroicons are used for icons via the `blade-heroicons` package.
+
 ## Visibility Levels
 
 Documents and directories support three visibility levels:
