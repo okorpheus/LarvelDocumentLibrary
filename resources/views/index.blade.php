@@ -24,9 +24,21 @@
     @endforeach
 @endif
 
-<div x-data="{ 'showAddDirectoryForm':false, 'showFileUploadForm':false }">
+<div x-data="{
+    showAddDirectoryForm: false,
+    showFileUploadForm: false,
+    showEditDirectoryForm: false,
+    editDirectory: { id: null, name: '', description: '', visibility: '' },
+    editDirectoryAction: '',
+    openEditDirectory(id, name, description, visibility) {
+        this.editDirectory = { id, name, description: description || '', visibility };
+        this.editDirectoryAction = '{{ url('document-library/directory') }}/' + id;
+        this.showEditDirectoryForm = true;
+    }
+}">
     @include('document-library::add-directory-modal')
     @include('document-library::upload-file-modal')
+    @include('document-library::edit-directory-modal')
     <div class="py-10">
         <header>
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -128,7 +140,8 @@
                                                 @endcan
 
                                                 @can('update', $directory)
-                                                    <button type="button">
+                                                    <button type="button"
+                                                            @click="openEditDirectory({{ $directory->id }}, '{{ addslashes($directory->name) }}', '{{ addslashes($directory->description) }}', '{{ $directory->visibility->value }}')">
                                                         <x-heroicon-o-pencil-square
                                                             class="w-5 h-5 text-blue-500 cursor-pointer"/>
                                                     </button>

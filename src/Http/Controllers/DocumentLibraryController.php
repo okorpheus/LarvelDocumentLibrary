@@ -135,9 +135,12 @@ class DocumentLibraryController extends Controller
         return redirect()->back()->with('success', 'Document deleted successfully.');
     }
 
-    public function updateDirectory(Directory $directory)
+    public function updateDirectory(Directory $directory, StoreDirectoryRequest $request)
     {
+        $this->authorize('update', $directory);
 
+        $directory->update($request->validated());
+        return redirect()->back();
     }
 
     public function updateDocument(Document $document)
