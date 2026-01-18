@@ -50,6 +50,16 @@ class Directory extends Model
         return $this->hasMany(Directory::class, 'parent_id');
     }
 
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'parent_id');
+    }
+
+    public function checkIfEmpty(): bool
+    {
+        return $this->documents()->count() === 0 && $this->children()->count() === 0;
+    }
+
     public function fullPath(): string
     {
         $path = '/'.$this->name;

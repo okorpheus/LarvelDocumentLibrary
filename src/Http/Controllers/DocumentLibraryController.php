@@ -2,15 +2,20 @@
 
 namespace Okorpheus\DocumentLibrary\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\Rule;
+use Okorpheus\DocumentLibrary\Actions\CreateDirectory;
 use Okorpheus\DocumentLibrary\Enums\VisibilityValues;
+use Okorpheus\DocumentLibrary\Http\Requests\StoreDirectoryRequest;
 use Okorpheus\DocumentLibrary\Models\Directory;
 use Okorpheus\DocumentLibrary\Models\Document;
 
 class DocumentLibraryController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(?Directory $directory)
     {
 
@@ -22,34 +27,29 @@ class DocumentLibraryController extends Controller
                 route('document-library.index');
             $fullPath = $this->pathWithLinks($directory);
             $currentDirectory = $directory;
+            $canCreateDocumentsWithinDirectory = auth()->user()->can('create', [Document::class, $directory]);
+            $canCreateDirectoriesWithinDirectory = auth()->user()->can('create', [Directory::class, $directory]);
         } else {
             $directories = Directory::whereNull('parent_id')->orderBy('sort_order')->orderBy('name')->get();
             $documents = Document::whereNull('parent_id')->orderBy('sort_order')->orderBy('name')->get();
             $parentLink = false;
             $fullPath = false;
             $currentDirectory = false;
+            $canCreateDocumentsWithinDirectory = auth()->user()->can('create', [Document::class]);
+            $canCreateDirectoriesWithinDirectory = auth()->user()->can('create', [Directory::class]);
         }
 
-        return view('document-library::index', compact('directories', 'parentLink', 'fullPath', 'currentDirectory', 'documents'));
+        return view('document-library::index', compact('directories', 'parentLink', 'fullPath', 'currentDirectory', 'documents', 'canCreateDocumentsWithinDirectory', 'canCreateDirectoriesWithinDirectory'));
     }
 
-    public function storeDirectory(Request $request)
+    public function storeDirectory(StoreDirectoryRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'visibility' => ['required', Rule::enum(VisibilityValues::class)],
-            'parent_id' => ['nullable', Rule::exists(Directory::class, 'id')],
-        ]);
-
-        Directory::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'parent_id' => $validated['parent_id'] ?? null,
-            'sort_order' => 1,
-            'user_id' => auth()->id(),
-            'visibility' => $validated['visibility'],
-        ]);
+        app(CreateDirectory::class)(
+            name: $request->validated('name'),
+            description: $request->validated('description'),
+            visibility: $request->validated('visibility'),
+            parentId: $request->validated('parent_id'),
+        );
 
         return redirect()->back();
     }
@@ -117,5 +117,13 @@ class DocumentLibraryController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function destroyDirectory(Directory $directory)
+    {
+        $this->authorize('delete', $directory);
+
+        $directory->delete();
+        return redirect()->back()->with('success', 'Directory deleted successfully.');
     }
 }

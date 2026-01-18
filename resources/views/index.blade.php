@@ -31,20 +31,27 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between">
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Document Library</h1>
-                <div class="flex gap-3">
-                    <button
-                        type="button"
-                        @click="showAddDirectoryForm = true"
-                        class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
-                        Add Directory
-                    </button>
-                    <button
-                        type="button"
-                        @click="showFileUploadForm = true"
-                        class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
-                        Upload File
-                    </button>
-                </div>
+                @auth
+                    <div class="flex gap-3">
+                        @if($canCreateDirectoriesWithinDirectory)
+
+                            <button
+                                type="button"
+                                @click="showAddDirectoryForm = true"
+                                class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                                Add Directory
+                            </button>
+                        @endif
+                        @if($canCreateDocumentsWithinDirectory)
+                            <button
+                                type="button"
+                                @click="showFileUploadForm = true"
+                                class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                                Upload File
+                            </button>
+                        @endif
+                    </div>
+                @endauth
             </div>
             @if($fullPath)
                 <div class="mt-3">
@@ -69,6 +76,9 @@
                             <thead>
                             <tr>
                                 <x-document-library::file-list-th>
+
+                                </x-document-library::file-list-th>
+                                <x-document-library::file-list-th>
                                     Name
                                 </x-document-library::file-list-th>
                                 <x-document-library::file-list-th>
@@ -92,7 +102,7 @@
 
                             @if($parentLink)
                                 <tr>
-                                    <x-document-library::file-list-td colspan="6">
+                                    <x-document-library::file-list-td colspan="7">
                                         <a href="{{ $parentLink }}">
                                             Parent Directory
                                         </a>
@@ -102,7 +112,21 @@
                             @foreach($directories as $directory)
                                 <tr>
                                     <x-document-library::file-list-td>
-                                        <a href="{{ route('document-library.directory', $directory) }}" class="underline hover:text-blue-600">
+                                        @can('delete', $directory)
+                                            <form method="POST"
+                                                  action="{{ route('document-library.directory.destroy', $directory) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit">
+                                                    <x-heroicon-o-trash class="w-5 h-5 text-red-500 cursor-pointer"/>
+                                                </button>
+                                            </form>
+                                        @endcan
+
+                                    </x-document-library::file-list-td>
+                                    <x-document-library::file-list-td>
+                                        <a href="{{ route('document-library.directory', $directory) }}"
+                                           class="underline hover:text-blue-600">
                                             {{ $directory->name }}
                                         </a>
                                     </x-document-library::file-list-td>
@@ -131,8 +155,12 @@
                             @endforeach
                             @foreach($documents as $document)
                                 <x-document-library::file-list-td>
-                                    <a href="{{ $document->downloadUrl() }}" download="{{ $document->name }}" class="underline hover:text-blue-600">
-                                    {{ $document->name }}
+                                    Actions
+                                </x-document-library::file-list-td>
+                                <x-document-library::file-list-td>
+                                    <a href="{{ $document->downloadUrl() }}" download="{{ $document->name }}"
+                                       class="underline hover:text-blue-600">
+                                        {{ $document->name }}
                                     </a>
                                 </x-document-library::file-list-td>
                                 <x-document-library::file-list-td>
