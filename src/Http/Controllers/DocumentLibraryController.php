@@ -143,8 +143,15 @@ class DocumentLibraryController extends Controller
         return redirect()->back();
     }
 
-    public function updateDocument(Document $document)
+    public function updateDocument(Document $document, Request $request)
     {
-
+        $this->authorize('update', $document);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'description' => 'nullable|string',
+            'visibility' => ['required', Rule::enum(VisibilityValues::class)],
+        ]);
+        $document->update($validated);
+        return redirect()->back();
     }
 }

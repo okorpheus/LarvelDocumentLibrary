@@ -28,17 +28,26 @@
     showAddDirectoryForm: false,
     showFileUploadForm: false,
     showEditDirectoryForm: false,
+    showEditDocumentForm: false,
     editDirectory: { id: null, name: '', description: '', visibility: '' },
     editDirectoryAction: '',
+    editDocument: { id: null, name: '', description: '', visibility: '' },
+    editDocumentAction: '',
     openEditDirectory(id, name, description, visibility) {
         this.editDirectory = { id, name, description: description || '', visibility };
         this.editDirectoryAction = '{{ url('document-library/directory') }}/' + id;
         this.showEditDirectoryForm = true;
+    },
+    openEditDocument(id, name, description, visibility) {
+        this.editDocument = { id, name, description: description || '', visibility };
+        this.editDocumentAction = '{{ url('document-library/file') }}/' + id;
+        this.showEditDocumentForm = true;
     }
 }">
     @include('document-library::add-directory-modal')
     @include('document-library::upload-file-modal')
     @include('document-library::edit-directory-modal')
+    @include('document-library::edit-document-modal')
     <div class="py-10">
         <header>
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -182,17 +191,27 @@
                                 @foreach($documents as $document)
                                     <tr>
                                         <x-document-library::file-list-td>
-                                            @can('delete', $document)
-                                                <form method="POST"
-                                                      action="{{ route('document-library.document.destroy', $document) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit">
-                                                        <x-heroicon-o-trash
-                                                            class="w-5 h-5 text-red-500 cursor-pointer"/>
+                                            <div class="flex gap-2">
+                                                @can('delete', $document)
+                                                    <form method="POST"
+                                                          action="{{ route('document-library.document.destroy', $document) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit">
+                                                            <x-heroicon-o-trash
+                                                                class="w-5 h-5 text-red-500 cursor-pointer"/>
+                                                        </button>
+                                                    </form>
+                                                @endcan
+
+                                                @can('update', $document)
+                                                    <button type="button"
+                                                            @click="openEditDocument({{ $document->id }}, '{{ addslashes($document->name) }}', '{{ addslashes($document->description) }}', '{{ $document->visibility->value }}')">
+                                                        <x-heroicon-o-pencil-square
+                                                            class="w-5 h-5 text-blue-500 cursor-pointer"/>
                                                     </button>
-                                                </form>
-                                            @endcan
+                                                @endcan
+                                            </div>
                                         </x-document-library::file-list-td>
                                         <x-document-library::file-list-td>
                                             <a href="{{ $document->downloadUrl() }}" download="{{ $document->name }}"
