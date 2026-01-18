@@ -114,18 +114,26 @@
                                 @foreach($directories as $directory)
                                     <tr>
                                         <x-document-library::file-list-td>
-                                            @can('delete', $directory)
-                                                <form method="POST"
-                                                      action="{{ route('document-library.directory.destroy', $directory) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit">
-                                                        <x-heroicon-o-trash
-                                                            class="w-5 h-5 text-red-500 cursor-pointer"/>
-                                                    </button>
-                                                </form>
-                                            @endcan
+                                            <div class="flex gap-2">
+                                                @can('delete', $directory)
+                                                    <form method="POST"
+                                                          action="{{ route('document-library.directory.destroy', $directory) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit">
+                                                            <x-heroicon-o-trash
+                                                                class="w-5 h-5 text-red-500 cursor-pointer"/>
+                                                        </button>
+                                                    </form>
+                                                @endcan
 
+                                                @can('update', $directory)
+                                                    <button type="button">
+                                                        <x-heroicon-o-pencil-square
+                                                            class="w-5 h-5 text-blue-500 cursor-pointer"/>
+                                                    </button>
+                                                @endcan
+                                            </div>
                                         </x-document-library::file-list-td>
                                         <x-document-library::file-list-td>
 
