@@ -134,4 +134,14 @@ class DocumentLibraryController extends Controller
         $document->delete();
         return redirect()->back()->with('success', 'Document deleted successfully.');
     }
+
+    public function updateDirectory(Directory $directory)
+    {
+
+    }
+
+    public function updateDocument(Document $document)
+    {
+
+    }
 }
