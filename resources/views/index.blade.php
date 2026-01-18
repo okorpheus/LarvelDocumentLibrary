@@ -103,7 +103,8 @@
                             @if($parentLink)
                                 <tr>
                                     <x-document-library::file-list-td colspan="7">
-                                        <a href="{{ $parentLink }}">
+                                        <a href="{{ $parentLink }}" class="flex items-center gap-2">
+                                            <x-heroicon-o-folder class="w-5 h-5 text-blue-500" />
                                             Parent Directory
                                         </a>
                                     </x-document-library::file-list-td>
@@ -125,10 +126,12 @@
 
                                     </x-document-library::file-list-td>
                                     <x-document-library::file-list-td>
-                                        <a href="{{ route('document-library.directory', $directory) }}"
-                                           class="underline hover:text-blue-600">
-                                            {{ $directory->name }}
-                                        </a>
+
+                                            <a href="{{ route('document-library.directory', $directory) }}"
+                                               class="underline hover:text-blue-600 flex items-center gap-2">
+                                                <x-heroicon-o-folder class="w-5 h-5 text-blue-500" />
+                                                {{ $directory->name }}
+                                            </a>
                                     </x-document-library::file-list-td>
 
                                     <x-document-library::file-list-td>
