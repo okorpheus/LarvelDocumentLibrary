@@ -2,8 +2,11 @@
 
 namespace Okorpheus\DocumentLibrary;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Okorpheus\DocumentLibrary\Models\Document;
+use Okorpheus\DocumentLibrary\Policies\DocumentPolicy;
 
 class DocumentLibraryServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,8 @@ class DocumentLibraryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(Document::class, DocumentPolicy::class);
+
         $this->publishes([
             __DIR__.'/../config/documentlibrary.php' => config_path('documentlibrary.php'),
         ],'documentlibrary-config');

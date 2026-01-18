@@ -6,4 +6,8 @@ return [
     'storage_disk' => env('DOCLIB_STORAGE_DISK', 'public'),
 
     'storage_path' => env('DOCLIB_STORAGE_PATH', 'document-library'),
+
+    'admin_check' => function ($user) {
+        return $user->isAdmin();
+    }
 ];
