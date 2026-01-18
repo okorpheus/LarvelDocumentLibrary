@@ -33,7 +33,11 @@ class DocumentLibraryServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../config/documentlibrary.php' => config_path('documentlibrary.php'),
-        ],'documentlibrary-config');
+        ], 'documentlibrary-config');
+
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/document-library'),
+        ], 'documentlibrary-views');
 
         // Register route model binding BEFORE loading routes
         Route::bind('directory', function ($value) {
